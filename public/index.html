@@ -15,12 +15,10 @@
       <span class="mobile-topbar-title">Sewaan RT</span>
       <div class="mobile-topbar-right">
         <span id="mobile-user-label" class="mobile-user-label">Tamu</span>
-        <button id="mobile-btn-auth" class="btn btn-sm btn-primary" onclick="showLoginModal()">Login</button>
-        <button id="mobile-btn-logout" class="btn btn-sm btn-ghost hidden" onclick="logout()">Keluar</button>
       </div>
     </div>
 
-    <!-- Sidebar -->
+    <!-- Sidebar (desktop only) -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -100,11 +98,8 @@
             </div>
           </div>
         </div>
-
-        <!-- Daftar Aset -->
         <div class="section-title">Daftar Aset</div>
         <div class="asset-grid" id="dashboard-assets"></div>
-
         <div class="info-banner">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f6ef7" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <span>Sewaan warga <strong>RT9</strong> bersifat sukarela &mdash; biaya bisa diisi manual.</span>
@@ -191,7 +186,31 @@
     </main>
   </div>
 
-  <!-- LOGIN MODAL (muncul saat butuh admin) -->
+  <!-- Mobile Bottom Nav (separate from sidebar) -->
+  <nav class="mobile-bottomnav">
+    <a href="#" class="mbnav-item active" data-page="dashboard">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#" class="mbnav-item" data-page="assets">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Aset</span>
+    </a>
+    <a href="#" class="mbnav-item" data-page="rentals">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Sewaan</span>
+    </a>
+    <a href="#" class="mbnav-item" data-page="report">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span>Laporan</span>
+    </a>
+    <a href="#" class="mbnav-item" data-page="login" id="mbnav-login" onclick="showLoginModal(); return false;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span id="mbnav-login-label">Login</span>
+    </a>
+  </nav>
+
+  <!-- LOGIN MODAL -->
   <div id="login-modal" class="modal">
     <div class="modal-content" style="width:360px">
       <div class="modal-header">
@@ -275,7 +294,6 @@
         <label>Tanggal Selesai</label>
         <input type="date" id="rental-end">
       </div>
-
       <div class="rt9-section">
         <label class="checkbox-label">
           <input type="checkbox" id="rental-rt9">
@@ -287,7 +305,6 @@
           <input type="number" id="rental-custom-cost" min="0" placeholder="Isi nominal sukarela">
         </div>
       </div>
-
       <div class="cost-preview" id="cost-preview"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeRentalModal()">Batal</button>

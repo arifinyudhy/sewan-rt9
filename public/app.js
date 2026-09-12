@@ -4,14 +4,17 @@ let assets = [];
 let pendingAction = null;
 
 // ===== AUTH =====
+const iconLogin = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>';
+const iconLogout = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
+
 function updateAuthUI() {
   const badge = document.getElementById('user-badge');
   const label = document.getElementById('user-label');
   const btnAuth = document.getElementById('btn-auth');
   const btnLogout = document.getElementById('btn-logout');
   const mobileLabel = document.getElementById('mobile-user-label');
-  const mobileBtnAuth = document.getElementById('mobile-btn-auth');
-  const mobileBtnLogout = document.getElementById('mobile-btn-logout');
+  const mbnavLoginLabel = document.getElementById('mbnav-login-label');
+  const mbnavLogin = document.getElementById('mbnav-login');
 
   if (isAdmin) {
     badge.className = 'user-badge admin';
@@ -19,16 +22,24 @@ function updateAuthUI() {
     btnAuth.classList.add('hidden');
     btnLogout.classList.remove('hidden');
     if (mobileLabel) mobileLabel.textContent = 'Admin';
-    if (mobileBtnAuth) mobileBtnAuth.classList.add('hidden');
-    if (mobileBtnLogout) mobileBtnLogout.classList.remove('hidden');
+    if (mbnavLoginLabel) mbnavLoginLabel.textContent = 'Logout';
+    if (mbnavLogin) {
+      mbnavLogin.querySelector('svg')?.remove();
+      mbnavLogin.insertAdjacentHTML('afterbegin', iconLogout);
+      mbnavLogin.onclick = (e) => { e.preventDefault(); logout(); };
+    }
   } else {
     badge.className = 'user-badge guest';
     label.textContent = 'Tamu';
     btnAuth.classList.remove('hidden');
     btnLogout.classList.add('hidden');
     if (mobileLabel) mobileLabel.textContent = 'Tamu';
-    if (mobileBtnAuth) mobileBtnAuth.classList.remove('hidden');
-    if (mobileBtnLogout) mobileBtnLogout.classList.add('hidden');
+    if (mbnavLoginLabel) mbnavLoginLabel.textContent = 'Login';
+    if (mbnavLogin) {
+      mbnavLogin.querySelector('svg')?.remove();
+      mbnavLogin.insertAdjacentHTML('afterbegin', iconLogin);
+      mbnavLogin.onclick = (e) => { e.preventDefault(); showLoginModal(); };
+    }
   }
 
   document.querySelectorAll('.admin-only').forEach(el => {
@@ -103,16 +114,30 @@ function authHeaders() {
 }
 
 // ===== NAVIGATION =====
+function navigateTo(page) {
+  document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.mbnav-item').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll(`[data-page="${page}"]`).forEach(el => el.classList.add('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'assets') loadAssets();
+  if (page === 'rentals') loadRentals();
+}
+
 document.querySelectorAll('.nav-item').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    link.classList.add('active');
-    document.getElementById('page-' + link.dataset.page).classList.add('active');
-    if (link.dataset.page === 'dashboard') loadDashboard();
-    if (link.dataset.page === 'assets') loadAssets();
-    if (link.dataset.page === 'rentals') loadRentals();
+    navigateTo(link.dataset.page);
+  });
+});
+
+document.querySelectorAll('.mbnav-item').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    if (link.id === 'mbnav-login') return;
+    navigateTo(link.dataset.page);
   });
 });
 
